@@ -2,9 +2,9 @@ const app = () => {
 	const calendar = () => {
 		let date = new Date(); // get date
 		let monthCount = date.getMonth() + 1; // get count month
-		let todayNumber = date.getDate(); // get today number
+		// let todayNumber = date.getDate(); // get today number
 		let yearNumber = date.getFullYear();
-		let nameDay = date.toString().split(" ")[0]; // get name day
+		// let nameDay = date.toString().split(" ")[0]; // get name day
 		let firstDay = new Date(yearNumber, monthCount - 1, 1); // get first day month
 
 		const dateNavigation = document.getElementById("date-navigation"); // get date navigation
@@ -63,11 +63,9 @@ const app = () => {
 		const init = () => {
 			let lineSize = 6;
 			let weekSize = 7;
-
-			let other = null;
+			let allSize = lineSize * weekSize;
 
 			const build = () => {
-				console.log("dsd");
 				for (let i = 0; i < lineSize; i++) {
 					let template = document.createElement("div");
 					template.classList.add("day-line");
@@ -79,7 +77,6 @@ const app = () => {
 			const addItems = () => {
 				for (let a = 0; a < lineSize; a++) {
 					for (let i = 0; i < weekSize; i++) {
-						//console.log(Object.values(columNames)[i]);
 						let newItem = getItem(Object.values(columNames)[i]);
 						let thisLine = daysContainer.getElementsByClassName("day-line")[a];
 
@@ -104,21 +101,37 @@ const app = () => {
 				};
 
 				const outputDayNum = () => {
+					let b = 0;
+					let st = 1;
 					let first = 0;
 
 					for (let i = 0; i < lineSize; i++) {
 						let k = 0;
+						let countsWithDifferent =
+							setDayInit() + countDaysMonth(monthCount, yearNumber);
 						let line = daysContainer.getElementsByClassName("day-line")[i];
 
 						if (setDayInit() > 0 && i === 0) {
 							k = setDayInit();
-							other = k;
 
 							for (let gg = 1; gg <= k; gg++) {
 								let day = line.getElementsByClassName("day-squre")[k - gg];
 								let number = day.getElementsByClassName("number")[0];
 								number.innerHTML +=
 									countDaysMonth(monthCount - 1, yearNumber) - gg + 1;
+							}
+						}
+
+						for (let bb = 0; bb < weekSize; bb++) {
+							b++;
+
+							if (b > countsWithDifferent) {
+								let day = line.getElementsByClassName("day-squre")[bb];
+								let number = day.getElementsByClassName("number")[0];
+
+								number.innerHTML += st;
+
+								st++;
 							}
 						}
 
@@ -139,21 +152,13 @@ const app = () => {
 				};
 
 				outputDayNum();
-			};
-
-			// get prev & next months
-			// console.log(
-			// 	columnMonth[monthCount - 1],
-			// 	columnMonth[monthCount - 2],
-			// 	columnMonth[monthCount > 12 ? monthCount - 1 : 0]
-			// );
-
+      };
+      
 			build();
 			addItems();
 
 			setTimeout(() => {
 				setDay();
-				console.log(other + countDaysMonth(monthCount, yearNumber), 7 * 6);
 			}, 0);
 		};
 
@@ -165,46 +170,3 @@ const app = () => {
 };
 
 document.addEventListener("DOMContentLoaded", app);
-
-window.addEventListener("load", function() {
-	// function draw() {
-	// 	let dayNow = 0;
-	// 	let todayIs = 0;
-	// 	let thisMonth = false;
-	// 	let countDays = daysInMonth(date.getMonth() + 1, date.getFullYear());
-	// 	var daysContainer = document.getElementsByClassName("days-container")[0];
-	// 	for (var i = 0; i < 6; i++) {
-	// 		let calendarLine = daysContainer.getElementsByClassName("day-line")[i];
-	// 		for (var j = 0; j < 7; j++) {
-	// 			dayNow++;
-	// 			let item;
-	// 			let nextDay = new Date(date);
-	// 			nextDay.setDate(date.getDate() + j);
-	// 			if (
-	// 				Object.values(columNames)[j] === columNames[stringDay] &&
-	// 				!thisMonth
-	// 			) {
-	// 				thisMonth = true;
-	// 			}
-	// 			console.log(">>>>>>", thisMonth === true ? todayIs : 0);
-	// 			if (thisMonth === true && countDays >= dayNow) {
-	// 				todayIs++;
-	// 			} else {
-	// 				todayIs = 0;
-	// 				thisMonth = false;
-	// 			}
-	// 			item = getItem(
-	// 				thisMonth === true ? todayIs : 0,
-	// 				Object.values(columNames)[j]
-	// 			);
-	// 			calendarLine.innerHTML += item;
-	// 			let currentBlock = calendarLine.getElementsByClassName("day-squre")[j];
-	// 			if (thisMonth === true) {
-	// 				currentBlock.classList.add("current");
-	// 			} else {
-	// 				currentBlock.classList.add("not-current");
-	// 			}
-	// 		}
-	// 	}
-	// }
-});
